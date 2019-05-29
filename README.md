@@ -140,14 +140,14 @@ bam.test.obj <- CellTagDataPostCollapsing(celltag.obj = bam.test.obj, collapsed.
 head(bam.test.obj@collapsed.count)
 ```
 Below is an example Jaccard Analysis result with Error Correction using Starcode collapsing (left - without collapsing, right - with collapsing):
-<div class="row">
+<p>
   <div class="column">
     <img src="/Exmples/jaccard wo collapsing.png" height="240" width="360">
   </div>
   <div class="column">
     <img src="/Exmples/jaccard example.png" height="240" width="360">
   </div>
-</div>
+</p>
 
 
 ### 2. Binarize the single-cell CellTag UMI count matrix
