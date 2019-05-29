@@ -139,6 +139,16 @@ bam.test.obj <- CellTagDataPostCollapsing(celltag.obj = bam.test.obj, collapsed.
 # Check the dimension of this collapsed count.
 head(bam.test.obj@collapsed.count)
 ```
+Below is an example Jaccard Analysis result with Error Correction using Starcode collapsing (left - without collapsing, right - with collapsing):
+<div class="row">
+  <div class="column">
+    <img src="/Exmples/jaccard wo collapsing.png" height="280" width="420">
+  </div>
+  <div class="column">
+    <img src="/Exmples/jaccard example.png" height="280" width="420">
+  </div>
+</div>
+
 
 ### 2. Binarize the single-cell CellTag UMI count matrix
 Here we would like to binarize the count matrix to contain 0 or 1, where 0 indicates no such CellTag found in a single cell and 1 suggests the existence of such CellTag. The suggested cutoff that marks existence or absence is at least 2 counts per CellTag per Cell. For details regarding to the cutoff choice, please refer to the paper - https://www.nature.com/articles/s41586-018-0744-4. The binary matrix will be stored in a slot - 'binary.mtx' - as a *dgCMatrix*. **Note: If collapsing was performed, binarization will based on the collapsed count matrix. Otherwise, it will be based on the raw count matrix**
