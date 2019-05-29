@@ -142,10 +142,10 @@ head(bam.test.obj@collapsed.count)
 Below is an example Jaccard Analysis result with Error Correction using Starcode collapsing (left - without collapsing, right - with collapsing):
 <div class="row">
   <div class="column">
-    <img src="/Exmples/jaccard wo collapsing.png" height="280" width="420">
+    <img src="/Exmples/jaccard wo collapsing.png" height="240" width="360">
   </div>
   <div class="column">
-    <img src="/Exmples/jaccard example.png" height="280" width="420">
+    <img src="/Exmples/jaccard example.png" height="240" width="360">
   </div>
 </div>
 
