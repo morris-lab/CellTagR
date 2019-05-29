@@ -21,7 +21,7 @@ In the first section, we would like to evaluate the CellTag library complexity u
 The extracted CellTag will be stored as attribute (fastq.full.celltag & fastq.only.celltag) in the result object.
 ```r
 # Read in data file that come with the package
-fpath <- system.file("extdata", "V2-1_R1.zip", package = "CloneHunter")
+fpath <- system.file("extdata", "V2-1_R1.zip", package = "CellTagR")
 extract.dir <- "."
 # Extract the dataset
 unzip(fpath, overwrite = FALSE, exdir = ".")
