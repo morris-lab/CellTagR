@@ -1,0 +1,85 @@
+---
+title: "Single-Cell CellTag Data Analysis"
+output: html_notebook
+---
+
+# Load the CloneHunter package if already installed while carrying out whitelisting
+```{r}
+library(CellTagR)
+```
+
+## The following two steps are skipped for time saving and demo purposes
+### Create a CellTag Object
+```{r, eval=FALSE}
+bam.test.obj <- CellTagObject(object.name = "", fastq.bam.directory = "")
+```
+
+### Extract CellTag Information
+```{r, eval=FALSE}
+bam.test.obj <- CellTagExtraction(celltag.obj = bam.test.obj, celltag.version = "v1")
+```
+
+### Load the demo object
+```{r}
+bam.test.obj <- readRDS("~/Desktop/presentation/Demo/demo_object.Rds")
+head(bam.test.obj@bam.parse.rslt[["v1"]])
+bam.test.obj@celltag.stats
+```
+
+### Generate the count matrix
+```{r}
+bam.test.obj <- CellTagMatrixCount(celltag.obj = bam.test.obj, barcodes.file = "~/Desktop/presentation/Demo/barcodes.tsv")
+dim(bam.test.obj@raw.count)
+```
+
+### Generate file for collapsing
+```{r}
+bam.test.obj <- CellTagDataForCollapsing(celltag.obj = bam.test.obj, output.file = "~/Desktop/collapsing.txt")
+```
+
+### Process the collapsing result
+```{r}
+bam.test.obj <- CellTagDataPostCollapsing(celltag.obj = bam.test.obj, collapsed.rslt.file = "~/Desktop/test_starcode_out_2.txt")
+dim(bam.test.obj@collapsed.count)
+```
+
+### generate the Binary matrix
+```{r}
+bam.test.obj <- SingleCellDataBinatization(bam.test.obj, 2)
+```
+
+### Look at the metric plots
+```{r, fig.width=10, fig.height=10}
+MetricPlots(bam.test.obj)
+```
+
+### Whitelist based filtering
+```{r}
+bam.test.obj <- SingleCellDataWhitelist(bam.test.obj, "~/Desktop/Morris Lab/CloneHunter/inst/extdata/v1_whitelist.csv")
+dim(bam.test.obj@whitelisted.count)
+```
+
+### Metric Based Filtering
+```{r}
+bam.test.obj <- MetricBasedFiltering(bam.test.obj, 20, comparison = "less")
+bam.test.obj <- MetricBasedFiltering(bam.test.obj, 2, comparison = "greater")
+dim(bam.test.obj@metric.filtered.count)
+```
+
+### Metric Plots Again to Check for Additional Filtering
+```{r, fig.width=10, fig.height=10}
+MetricPlots(bam.test.obj)
+```
+
+### Jaccard Analysis
+```{r}
+bam.test.obj <- JaccardAnalysis(bam.test.obj)
+```
+
+### Clone Calling
+```{r}
+bam.test.obj <- CloneCalling(celltag.obj = bam.test.obj, correlation.cutoff=0.7)
+bam.test.obj@clone.composition[["v1"]]
+bam.test.obj@clone.size.info[["v1"]]
+```
+

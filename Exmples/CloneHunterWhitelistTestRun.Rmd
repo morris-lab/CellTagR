@@ -1,0 +1,76 @@
+---
+title: "Whitelist Regeneration Notebook"
+output: html_notebook
+---
+
+### Load the Package
+```{r}
+library(roxygen2)
+library(devtools)
+setwd("~/Desktop/CloneHunterNew_5/")
+setwd("CloneHunterNew/")
+devtools::document()
+```
+
+## V1
+### Create CellTag Object
+```{r}
+v1.whitelist <- CellTagObject("v1.whitelist", "~/Desktop/CloneHunterTest/V1_S1_L001_R1_001.fastq")
+```
+
+### Extract the CellTag Reads
+```{r}
+v1.whitelist <- CellTagExtraction(v1.whitelist, "v1")
+```
+
+### Sort by CellTag Frequency
+```{r}
+v1.whitelist <- AddCellTagFreqSort(v1.whitelist)
+```
+
+### V1 Whitelist Generation
+```{r}
+v1.whitelist <- CellTagWhitelistFiltering(v1.whitelist, 0.9)
+```
+
+## V2
+### Create CellTag Object
+```{r}
+v2.whitelist <- CellTagObject("v1.whitelist", "~/Desktop/CloneHunterTest/V2-1_S2_L001_R1_001.fastq")
+```
+
+### Extract the CellTag Reads
+```{r}
+v2.whitelist <- CellTagExtraction(v2.whitelist, "v2")
+```
+
+### Sort by CellTag Frequency
+```{r}
+v2.whitelist <- AddCellTagFreqSort(v2.whitelist)
+```
+
+### V2 Whitelist Generation
+```{r}
+v2.whitelist <- CellTagWhitelistFiltering(v2.whitelist, 0.9)
+```
+
+## V3
+### Create CellTag Object
+```{r}
+v3.whitelist <- CellTagObject("v3.whitelist", "~/Desktop/CloneHunterTest/V2-2_S3_L001_R1_001.fastq")
+```
+
+### Extract the CellTag Reads
+```{r}
+v3.whitelist <- CellTagExtraction(v3.whitelist, "v3")
+```
+
+### Sort by CellTag Frequency
+```{r}
+v3.whitelist <- AddCellTagFreqSort(v3.whitelist)
+```
+
+### V2 Whitelist Generation
+```{r}
+v3.whitelist <- CellTagWhitelistFiltering(v3.whitelist, 0.9)
+```
