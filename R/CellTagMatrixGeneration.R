@@ -55,7 +55,7 @@ CellTagMatrixCount <- function(celltag.obj, barcodes.file) {
   rownames(stats.df) <- c("CellTag.UMI.Counts", "Cells.per.CellTag", "Cell.UMI.Counts", "CellTags.per.Cell")
   stats.df <- as.data.frame(stats.df)
   
-  celltag.obj@celltag.stats[[celltag.obj@curr.version]] <- stats.df
+  #celltag.obj@celltag.stats[[celltag.obj@curr.version]] <- stats.df
   
   dgc.mtx.filter <- dgc.mtx[, which(colSums(dgc.mtx) > 0)]
   new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "raw.count", as(dgc.mtx.filter, "dgCMatrix"))

@@ -64,6 +64,7 @@ CellTagDataPostCollapsing <- function(celltag.obj, collapsed.rslt.file) {
     if (length(curr.collapse.set) > 1) {
       curr.collapse.set <- strsplit(curr.row$V3, ",")[[1]]
       curr.to.collapse <- setdiff(curr.collapse.set, curr.centroid)
+      curr.ct <- substring(curr.centroid, 1, 8)
       for (j in 1:length(curr.to.collapse)) {
         curr.for.c <- curr.to.collapse[j]
         curr.for.c.ct <- substring(curr.for.c, 1, 8)
