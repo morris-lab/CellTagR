@@ -109,7 +109,7 @@ In this section, we are presenting an alternative approach that utilizes this pa
 This object is what we have generated from the above steps using bam files. As mentioned before, bam files take a long time to process. Hence, in this repository, we include a sample object saved as .Rds file from the previous steps, in which raw count matrix is included in the slot - "raw.count"
 ```r
 # Read the RDS file and get the object
-dt.mtx.path <- system.file("extdata", "hf1.d15.demo.Rds", package = "CellTagR")
+dt.mtx.path <- system.file("extdata", "Demo_V1.Rds", package = "CellTagR")
 bam.test.obj <- readRDS(dt.mtx.path)
 ```
 
