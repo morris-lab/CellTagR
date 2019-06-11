@@ -9,7 +9,7 @@ CellTagObject(object.name, fastq.bam.directory)
 \arguments{
 \item{object.name}{The name of the object}
 
-\item{fastq.bam.input}{The input fastq/bam data directory}
+\item{fastq.bam.input}{The input fastq/bam data file path}
 
 \item{celltag.version}{Which version of CellTags are you working with?}
 }
