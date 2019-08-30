@@ -75,7 +75,7 @@ bam.process <- function(bam.file, pattern, short.nt.before.tag, short.nt.after.t
   if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
   if (!requireNamespace("Rsamtools", quietly = TRUE)) {
-    BiocManager::install("Rsamtools", version = "3.8")
+    BiocManager::install("Rsamtools")
   }
   library(Rsamtools)
   # Get the bam file
