@@ -123,7 +123,7 @@ CellTagDataPostCollapsing <- function(celltag.obj, collapsed.rslt.file) {
     final.collapsing.df <- rbind(final.collapsing.df, curr.diff.rows)
   }
   
-  final.collapsing.df <- final.collapsing.df[-which(is.na(final.collapsing.df$concat)), ]
+  if (length(which(is.na(final.collapsing.df$concat))) > 0) final.collapsing.df <- final.collapsing.df[-which(is.na(final.collapsing.df$concat)), ]
   rownames(final.collapsing.df) <- final.collapsing.df$concat
   final.collapsing.df <- cbind(final.collapsing.df, collapsing[rownames(final.collapsing.df), c("Cell.Barcode", "concat")])
   
