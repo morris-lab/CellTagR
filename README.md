@@ -249,7 +249,7 @@ The linked list is saved in the slot - "network.link.list", in the following for
 |:-------:|:------:|:------:|:------:|
 |The Source Node|The Target Node|Associated CellTag|Original Target Name|
 
-In the source node, the data is formatted as <CellTag Version>_<Clone Number>. These are the centroid nodes for the network. The clone number can be found in the previously filled slot - "clone.composition". In the target node, there are two possibilities. One of possible targets are cells that belong to the centroid clone. The others are clones that are related to the centroid clone, which will suggest "parent-child" relationship between clones. For example, in the table below, the first row describes the belonging relationship of cell with barcode "AAGCCGCAGCTAGCCC-1" to Clone3 from CellTag V1, while the second row indicates a "parent-child" relationship between Clone 1 from CellTag V1 and Clone 42 from CellTag V2. 
+In the source node, the data is formatted as \<CellTag Version\>_\<Clone Number\>. These are the centroid nodes for the network. The clone number can be found in the previously filled slot - "clone.composition". In the target node, there are two possibilities. One of possible targets are cells that belong to the centroid clone. The others are clones that are related to the centroid clone, which will suggest "parent-child" relationship between clones. For example, in the table below, the first row describes the belonging relationship of cell with barcode "AAGCCGCAGCTAGCCC-1" to Clone3 from CellTag V1, while the second row indicates a "parent-child" relationship between Clone 1 from CellTag V1 and Clone 42 from CellTag V2. 
 
 |source|target|tag|target_unmodified|
 |:-------:|:------:|:------:|:------:|
