@@ -23,7 +23,7 @@ CellTagExtraction <- function(celltag.obj, celltag.version) {
   
   p.calling <- CellTagPatternCalling(celltag.version)
   
-  if (endsWith(fastq.bam.input, "fastq")) {
+  if (endsWith(fastq.bam.input, "fastq") || endsWith(fastq.bam.input, "fq")) {
     rslt <- fastq.process(fastq.file = fastq.bam.input, pattern = p.calling[1], p.calling[2], p.calling[3])
     celltag.obj@fastq.full.celltag[[celltag.version]] <- rslt[[1]]
     celltag.obj@fastq.only.celltag[[celltag.version]] <- rslt[[2]]
