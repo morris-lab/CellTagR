@@ -70,7 +70,7 @@ fastq.process <- function(fastq.file, pattern, short.nt.before.tag, short.nt.aft
 #' @examples
 #' bam.process("data.fastq", "CCGGT[ATCG]{8}GAATTC", "CCGGT", "GAATTC")
 #' 
-bam.process <- function(bam.file, pattern, short.nt.before.tag, short.nt.after.tag) {
+bam.process <- function(bam.file, pattern, short.nt.before.tag, short.nt.after.tag, technique) {
   # Install Rsamtools
   if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
@@ -88,7 +88,15 @@ bam.process <- function(bam.file, pattern, short.nt.before.tag, short.nt.after.t
   # Initialize the number of lines to read at once
   yieldSize(bamFile) <- 1000000
   open(bamFile)
-  parameters <- ScanBamParam(what = scanBamWhat(), tag = c("CB", "GN", "UB", "CR"))
+  if (tolower(technique) == "10x") {
+      parameters <- ScanBamParam(what = scanBamWhat(), tag = c("CB", "GN", "UB", "CR"))
+  } else {
+      if (tolower(technique) == "dropseq") {
+          parameters <- ScanBamParam(what = scanBamWhat(), tag = c("XC", "GN", "XM", "GE"))
+      } else {
+          stop("We don't support your current single-cell sequencing technology. Please contact us to add.")
+      }
+  }
   bam.parsed.df <- data.table()
   count <- 0
   while(TRUE) {
@@ -103,8 +111,15 @@ bam.process <- function(bam.file, pattern, short.nt.before.tag, short.nt.after.t
       reg.rslt <- regexpr(pattern, curr.seqs, ignore.case = TRUE, perl = TRUE)
       contain.idx <- which(reg.rslt > 0)
       if (length(contain.idx) > 0) {
-        curr.cell.bc <- curr.read$tag$CB
-        curr.umi <- curr.read$tag$UB
+          if (tolower(technique) == "10x") {
+            curr.cell.bc <- curr.read$tag$CB
+            curr.umi <- curr.read$tag$UB
+          } else {
+            if (tolower(technique) == "dropseq") {
+                curr.cell.bc <- curr.read$tag$XC
+                curr.umi <- curr.read$XM
+            }
+          }
         curr.cell.tag <- rep(NA, length(curr.read$qname))
         if (!(is.null(curr.cell.bc) | is.null(curr.umi))) {
           # Initialize the current data table

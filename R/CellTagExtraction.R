@@ -8,7 +8,7 @@
 #' @examples
 #' CellTagExtraction(bam.test.obj)
 #' 
-CellTagExtraction <- function(celltag.obj, celltag.version) {
+CellTagExtraction <- function(celltag.obj, celltag.version, technique = "10x") {
   celltag.obj@curr.version <- celltag.version
   fastq.bam.input <- celltag.obj@fastq.bam.dir
   if (length(celltag.obj@celltag.version) > 0) {
@@ -29,7 +29,7 @@ CellTagExtraction <- function(celltag.obj, celltag.version) {
     celltag.obj@fastq.only.celltag[[celltag.version]] <- rslt[[2]]
   }
   if (endsWith(fastq.bam.input, "bam")) {
-    rslt <- bam.process(bam.file = fastq.bam.input, pattern = p.calling[1], p.calling[2], p.calling[3])
+    rslt <- bam.process(bam.file = fastq.bam.input, pattern = p.calling[1], p.calling[2], p.calling[3], technique)
     celltag.obj@bam.parse.rslt[[celltag.version]] <- rslt
   }
   
