@@ -117,7 +117,7 @@ bam.process <- function(bam.file, pattern, short.nt.before.tag, short.nt.after.t
           } else {
             if (tolower(technique) == "dropseq") {
                 curr.cell.bc <- curr.read$tag$XC
-                curr.umi <- curr.read$XM
+                curr.umi <- curr.read$tag$XM
             }
           }
         curr.cell.tag <- rep(NA, length(curr.read$qname))
@@ -162,7 +162,7 @@ bam.process <- function(bam.file, pattern, short.nt.before.tag, short.nt.after.t
 #' 
 CellTagPatternCalling <- function(celltag.version) {
   celltag.df <- data.frame(version = c("v1", "v2", "v3"),
-                           nt.before.tag = c("CCGGT", "GTGATG", "TGTACG"),
+                           nt.before.tag = c("GGT", "GTGATG", "TGTACG"),
                            stringsAsFactors = F)
   rownames(celltag.df) <- celltag.df$version
   short.nt.before.tag <- celltag.df[celltag.version, "nt.before.tag"]
