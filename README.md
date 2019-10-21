@@ -110,7 +110,15 @@ bam.test.obj <- CellTagMatrixCount(celltag.obj = bam.test.obj, barcodes.file = "
 dim(bam.test.obj@raw.count)
 ```
 
-**Update: CellTagR now enables read in of multiple BAM files at a time.** An aggregated barcodes file needs to be generated for multiple BAM file processing with proper prefixes.
+**Update: CellTagR now enables read in of multiple BAM files at a time.** An aggregated barcodes file needs to be generated for multiple BAM file processing with proper prefixes. Please use the *Barcode.Aggregate* function to generate a aggregated barcode file. This function takes in an **ordered** list of barcodes files. The order should be the same as the BAM file order.
+
+```r
+Barcode.Aggregate(list("barcode_1.tsv", "barcode_2.tsv"), "./barcodes_all.tsv")
+# Generate the sparse count matrix
+bam.test.obj <- CellTagMatrixCount(celltag.obj = bam.test.obj, barcodes.file = "./barcodes_all.tsv")
+# Check the dimension of the raw count matrix
+dim(bam.test.obj@raw.count)
+```
 
 The generated CellTag UMI count matrices can then be used in the following steps for clone identification.
 
