@@ -172,6 +172,29 @@ CellTagPatternCalling <- function(celltag.version) {
   return(c(pattern, short.nt.before.tag, short.nt.after.tag))
 }
 
+#' CellTag Barcode Aggregation function
+#'
+#' This function allows barcode aggregation of multiple-file processing. 
+#' @param file.list files in a list to aggregate in order same as the BAM files
+#' @param output.file where to save this aggregated output file. Should be a .tsv file.
+#' @return A list containing the pattern, nucleotides to look for before/after the motif
+#' @keywords single-cell RNA-seq data, CellTagging
+#' @export
+#' @examples
+#' Barcode.Aggregate(list("barcodes_1.tsv", "barcodes_2.tsv"), output.file = "barcode_aggr.tsv")
+#' 
+Barcode.Aggregate <- function(file.list, output.file) {
+  final.bc <- c()
+  for (i in 1:length(file.list)) {
+    curr.prefix <- paste0("Sample-", i, "_")
+    curr.file <- file.list[[i]]
+    curr.bc <- read.table(curr.file, header = F, stringsAsFactors = F)
+    bc.to.save <- paste0(curr.prefix, curr.bc[,1])
+    final.bc <- c(final.bc, bc.to.save)
+  }
+  write.table(as.data.frame(final.bc), output.file, sep = "\t", row.names = F, col.names = F, quote = F)
+}
+
 
 GetCellTagCurrentVersionWorkingMatrix <- function(celltag.obj, slot.to.select) {
   curr.mtx <- slot(celltag.obj, slot.to.select)
