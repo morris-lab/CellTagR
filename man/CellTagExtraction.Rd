@@ -4,10 +4,14 @@
 \alias{CellTagExtraction}
 \title{CellTag Extraction Function}
 \usage{
-CellTagExtraction(celltag.obj, celltag.version)
+CellTagExtraction(celltag.obj, celltag.version, technique = "10x")
 }
 \arguments{
 \item{celltag.obj}{A CellTag object initialized with path to the fastq/bam file}
+
+\item{celltag.version}{The CellTag version to extract}
+
+\item{technique}{The technique used for scRNA-seq, Default to 10x. Currently enabled for 10x and dropseq.}
 }
 \value{
 A CellTag object with attribute (bam.parse.rslt) filled
