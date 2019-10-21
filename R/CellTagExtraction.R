@@ -10,7 +10,11 @@
 #' 
 CellTagExtraction <- function(celltag.obj, celltag.version, technique = "10x") {
   celltag.obj@curr.version <- celltag.version
-  fastq.bam.input <- list.files(celltag.obj@fastq.bam.dir, full.names = T)
+  if (file_test("-f", celltag.obj@fastq.bam.dir)) {
+    fastq.bam.input <- celltag.obj@fastq.bam.dir
+  } else {
+    fastq.bam.input <- list.files(celltag.obj@fastq.bam.dir, full.names = T)
+  }
   file.extension.unique <- unique(file_ext(fastq.bam.input))
   
   if (length(celltag.obj@celltag.version) > 0) {
