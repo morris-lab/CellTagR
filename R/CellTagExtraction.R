@@ -2,6 +2,8 @@
 #'
 #' This function extracts CellTags from the raw fastq/bam sequencing file. If it is a fastq file, provides counts of each CellTag and sorts them in desending order. If it is a bam file, returns the barcode, umi, celltag information.
 #' @param celltag.obj A CellTag object initialized with path to the fastq/bam file
+#' @param celltag.version The CellTag version to extract
+#' @param technique The technique used for scRNA-seq, Default to 10x. Currently enabled for 10x and dropseq.
 #' @return A CellTag object with attribute (bam.parse.rslt) filled
 #' @keywords single-cell RNA-seq data, CellTagging
 #' @export
