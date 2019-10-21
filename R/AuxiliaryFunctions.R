@@ -83,6 +83,7 @@ bam.process <- function(bam.file, pattern, short.nt.before.tag, short.nt.after.t
   # Get the size of the bam file
   bam.size <- file.size(bam.file)
   total <- bam.size/(1000000 * 82.99)
+  print(paste0("Reading ", bam.file, " ..."))
   # Initialize the progress bar
   pb <- txtProgressBar(min = 0, max = total, style = 3)
   # Initialize the number of lines to read at once
@@ -124,7 +125,6 @@ bam.process <- function(bam.file, pattern, short.nt.before.tag, short.nt.after.t
         if (!(is.null(curr.cell.bc) | is.null(curr.umi))) {
           # Initialize the current data table
           curr.df <- data.table(Cell.BC = curr.cell.bc, UMI = curr.umi, Cell.Tag = curr.cell.tag)
-          
           curr.f.seq <- curr.seqs[contain.idx]
           start.loc <- reg.rslt[contain.idx]
           end.loc <- start.loc + nchar(short.nt.before.tag) + 8 + nchar(short.nt.after.tag) - 1

@@ -14,7 +14,7 @@ SingleCellDataBinatization <- function(celltag.obj, tag.cutoff) {
   if (sum(dim(obj.collapsed.count)) <= 0) {
     CellTags <- GetCellTagCurrentVersionWorkingMatrix(celltag.obj, "raw.count")
   } else {
-    CellTags <- celltag.obj@collapsed.count
+    CellTags <- obj.collapsed.count
   }
   CellTags[CellTags < tag.cutoff] <- 0
   CellTags[CellTags > 0] <- 1

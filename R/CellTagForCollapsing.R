@@ -20,9 +20,21 @@ CellTagDataForCollapsing <- function(celltag.obj, output.file) {
   for.collapse$X1 <- as.character(for.collapse$X1)
   for.collapse$X2 <- as.character(for.collapse$X2)
   # Create the contatenation column
-  for.collapse$concat <- paste0(for.collapse$X1, unlist(lapply(strsplit(for.collapse$X2, "-"), function(x) x[1])))
-  for.collapse.sub <- for.collapse[, c("concat", "value")]
-  write.table(for.collapse.sub, output.file, sep = "\t", row.names = F, quote = F, col.names = F)
+  if (length(list.files(celltag.obj@fastq.bam.dir)) > 1) {
+    parts.to.paste <- unlist(lapply(strsplit(for.collapse$X2, "_"), function(x) x[2]))
+    for.collapse$concat <- paste0(for.collapse$X1, unlist(lapply(strsplit(parts.to.paste, "-"), function(x) x[1])))
+    sample.list.prefix <- unique(unlist(lapply(strsplit(for.collapse$X2, "_"), function(x) x[1])))
+    r <- apply(as.data.frame(sample.list.prefix), 1, 
+               function(x) {
+                 for.collapse.sub <- for.collapse[which(startsWith(for.collapse$X2, x)), c("concat", "value")]
+                 filename.to.save <- paste0(strsplit(output.file, "[.]")[[1]][1], "_", x, ".txt")
+                 write.table(for.collapse.sub, filename.to.save, sep = "\t", row.names = F, quote = F, col.names = F)
+               })
+  } else {
+    for.collapse$concat <- paste0(for.collapse$X1, unlist(lapply(strsplit(for.collapse$X2, "-"), function(x) x[1])))
+    for.collapse.sub <- for.collapse[, c("concat", "value")]
+    write.table(for.collapse.sub, output.file, sep = "\t", row.names = F, quote = F, col.names = F)
+  }
   # Set CellTag object
   celltag.obj@pre.starcode[[celltag.obj@curr.version]] <- for.collapse
   # Print the path saved
@@ -42,132 +54,114 @@ CellTagDataForCollapsing <- function(celltag.obj, output.file) {
 #' CellTagDataPostCollapsing(bam.test.obj, "./collapsing_result.txt")
 #' 
 CellTagDataPostCollapsing <- function(celltag.obj, collapsed.rslt.file) {
-  # Read in the collpased result
-  collapsed <- read.table(collapsed.rslt.file, sep = "\t", header = F, stringsAsFactors = F)
-  # Read in the file for collapsing
-  collapsing <- celltag.obj@pre.starcode[[celltag.obj@curr.version]]
-  rownames(collapsing) <- collapsing$concat
-  colnames(collapsing)[c(1:2)] <- c("CellTag", "Cell.Barcode")
-  new.collapsing.df <- collapsing
-  final.collapsing.df <- data.frame()
-  
-  cell.bc <- substring(collapsed$V1, 9)
-  cell.ct <- substring(collapsed$V1, 1, 8)
-  cell.same <- apply(collapsed, 1, 
-                     function(x) {
-                       cell.bc <- substring(x[1], 9)
-                       cell.subset <- strsplit(x[3], ",")[[1]]
-                       return(all(endsWith(cell.subset, cell.bc)))
-                     })
-  
-  cell.same.index <- which(cell.same)
-  cell.diff.indx <- which(!cell.same)
-  
-  pb <- txtProgressBar(min = 0, max = length(cell.bc), style = 3)
-  pb.count <- 0
-  for (csi in cell.same.index) {
-    pb.count <- pb.count + 1
-    setTxtProgressBar(pb, pb.count)
-    
-    curr.row <- collapsed[csi,]
-    curr.centroid <- curr.row$V1
-    curr.count <- curr.row$V2
-    curr.ct <- cell.ct[csi]
-    
-    curr.new.row <- data.frame(row.names = curr.centroid, concat = curr.centroid, CellTag = curr.ct, 
-                               value = curr.count, stringsAsFactors = F)
-    
-    if (nrow(final.collapsing.df) <= 0){
-      final.collapsing.df <- curr.new.row
+  ultimate.collapsing.df <- data.frame()
+  for (i in 1:length(collapsed.rslt.file)) {
+    print(paste0("Processing ", curr.file.dir))
+    final.collapsing.df <- data.frame()
+    # Process this one by one
+    curr.file.dir <- collapsed.rslt.file[i]
+    # Read in the collpased result
+    collapsed <- read.table(curr.file.dir, sep = "\t", header = F, stringsAsFactors = F)
+    # Read in the file for collapsing
+    if (length(collapsed.rslt.file) > 1) {
+      curr.sample.parts <- strsplit(basename(curr.file.dir), "_")[[1]]
+      curr.sample <- strsplit(curr.sample.parts[length(curr.sample.parts)], "[.]")[[1]][1]
+      collapsing <- celltag.obj@pre.starcode[[celltag.obj@curr.version]]
+      collapsing <- collapsing[which(startsWith(collapsing$X2, curr.sample)), ]
     } else {
-      final.collapsing.df <- rbind(final.collapsing.df, curr.new.row)
+      collapsing <- celltag.obj@pre.starcode[[celltag.obj@curr.version]]
     }
-  }
-  
-  for (cdi in cell.diff.indx) {
-    pb.count <- pb.count + 1
-    setTxtProgressBar(pb, pb.count)
+    rownames(collapsing) <- collapsing$concat
+    colnames(collapsing)[c(1:2)] <- c("CellTag", "Cell.Barcode")
+    new.collapsing.df <- collapsing
     
-    curr.row <- collapsed[cdi,]
-    curr.centroid <- curr.row$V1
-    curr.count <- curr.row$V2
-    curr.collapse.set <- strsplit(curr.row$V3, ",")[[1]]
-    curr.ct <- cell.ct[cdi]
-    curr.bc <- cell.bc[cdi]
+    cell.bc <- substring(collapsed$V1, 9)
+    cell.ct <- substring(collapsed$V1, 1, 8)
+    cell.same <- apply(collapsed, 1, 
+                       function(x) {
+                         cell.bc <- substring(x[1], 9)
+                         cell.subset <- strsplit(x[3], ",")[[1]]
+                         return(all(endsWith(cell.subset, cell.bc)))
+                       })
     
-    same.concat <- curr.collapse.set[which(endsWith(curr.collapse.set, curr.bc))]
-    curr.to.collapse <- setdiff(same.concat, curr.centroid)
+    cell.same.index <- which(cell.same)
+    cell.diff.indx <- which(!cell.same)
     
-    if (length(curr.to.collapse) > 0) {
-      for (j in 1:length(curr.to.collapse)) {
-        curr.for.c <- curr.to.collapse[j]
-        curr.for.c.ct <- substring(curr.for.c, 1, 8)
-        if (curr.for.c.ct != curr.ct) {
-          ind <- which(collapsing$concat == curr.to.collapse[j])
-          ind.cent <- which(collapsing$concat == curr.centroid)
-          new.collapsing.df[ind, "concat"] <- curr.centroid
-          new.collapsing.df[ind, "CellTag"] <- collapsing[ind.cent[1], "CellTag"]
-          new.collapsing.df[ind, "Cell.Barcode"] <- collapsing[ind.cent[1], "Cell.Barcode"]
-        }
+    pb <- txtProgressBar(min = 0, max = length(cell.bc), style = 3)
+    pb.count <- 0
+    for (csi in cell.same.index) {
+      pb.count <- pb.count + 1
+      setTxtProgressBar(pb, pb.count)
+      
+      curr.row <- collapsed[csi,]
+      curr.centroid <- curr.row$V1
+      curr.count <- curr.row$V2
+      curr.ct <- cell.ct[csi]
+      
+      curr.new.row <- data.frame(row.names = curr.centroid, concat = curr.centroid, CellTag = curr.ct, 
+                                 value = curr.count, stringsAsFactors = F)
+      
+      if (nrow(final.collapsing.df) <= 0){
+        final.collapsing.df <- curr.new.row
+      } else {
+        final.collapsing.df <- rbind(final.collapsing.df, curr.new.row)
       }
-      curr.centroid.sub <- new.collapsing.df[which(new.collapsing.df$concat == curr.centroid), ]
-      curr.count.new <- sum(curr.centroid.sub$value)
-      curr.new.row <- data.frame(row.names = curr.centroid, concat = curr.centroid, CellTag = curr.ct,
-                                 value = curr.count.new, stringsAsFactors = F)
-    }else {
-      curr.new.row <- new.collapsing.df[same.concat, c("concat", "CellTag", "value")]
     }
-    curr.diff.rows <- new.collapsing.df[setdiff(curr.collapse.set, same.concat), c("concat", "CellTag", "value")]
     
-    final.collapsing.df <- rbind(final.collapsing.df, curr.new.row)
-    final.collapsing.df <- rbind(final.collapsing.df, curr.diff.rows)
+    for (cdi in cell.diff.indx) {
+      pb.count <- pb.count + 1
+      setTxtProgressBar(pb, pb.count)
+      
+      curr.row <- collapsed[cdi,]
+      curr.centroid <- curr.row$V1
+      curr.count <- curr.row$V2
+      curr.collapse.set <- strsplit(curr.row$V3, ",")[[1]]
+      curr.ct <- cell.ct[cdi]
+      curr.bc <- cell.bc[cdi]
+      
+      same.concat <- curr.collapse.set[which(endsWith(curr.collapse.set, curr.bc))]
+      curr.to.collapse <- setdiff(same.concat, curr.centroid)
+      
+      if (length(curr.to.collapse) > 0) {
+        for (j in 1:length(curr.to.collapse)) {
+          curr.for.c <- curr.to.collapse[j]
+          curr.for.c.ct <- substring(curr.for.c, 1, 8)
+          if (curr.for.c.ct != curr.ct) {
+            ind <- which(collapsing$concat == curr.to.collapse[j])
+            ind.cent <- which(collapsing$concat == curr.centroid)
+            new.collapsing.df[ind, "concat"] <- curr.centroid
+            new.collapsing.df[ind, "CellTag"] <- collapsing[ind.cent[1], "CellTag"]
+            new.collapsing.df[ind, "Cell.Barcode"] <- collapsing[ind.cent[1], "Cell.Barcode"]
+          }
+        }
+        curr.centroid.sub <- new.collapsing.df[which(new.collapsing.df$concat == curr.centroid), ]
+        curr.count.new <- sum(curr.centroid.sub$value)
+        curr.new.row <- data.frame(row.names = curr.centroid, concat = curr.centroid, CellTag = curr.ct,
+                                   value = curr.count.new, stringsAsFactors = F)
+      }else {
+        curr.new.row <- new.collapsing.df[same.concat, c("concat", "CellTag", "value")]
+      }
+      curr.diff.rows <- new.collapsing.df[setdiff(curr.collapse.set, same.concat), c("concat", "CellTag", "value")]
+      
+      final.collapsing.df <- rbind(final.collapsing.df, curr.new.row)
+      final.collapsing.df <- rbind(final.collapsing.df, curr.diff.rows)
+    }
+    if (length(which(is.na(final.collapsing.df$concat))) > 0) final.collapsing.df <- final.collapsing.df[-which(is.na(final.collapsing.df$concat)), ]
+    rownames(final.collapsing.df) <- final.collapsing.df$concat
+    final.collapsing.df <- cbind(final.collapsing.df, collapsing[rownames(final.collapsing.df), c("Cell.Barcode", "concat")])
+    
+    if (nrow(ultimate.collapsing.df) <= 0) {
+      ultimate.collapsing.df <- final.collapsing.df
+    } else {
+      ultimate.collapsing.df <- rbind(ultimate.collapsing.df, final.collapsing.df)
+    }
+    rownames(ultimate.collapsing.df) <- NULL
+    close(pb)
   }
   
-  if (length(which(is.na(final.collapsing.df$concat))) > 0) final.collapsing.df <- final.collapsing.df[-which(is.na(final.collapsing.df$concat)), ]
-  rownames(final.collapsing.df) <- final.collapsing.df$concat
-  final.collapsing.df <- cbind(final.collapsing.df, collapsing[rownames(final.collapsing.df), c("Cell.Barcode", "concat")])
-  
-  close(pb)
-  
-  # # Process the collapsing data file
-  # for (i in 1:nrow(collapsed)) {
-  #   curr.row <- collapsed[i,]
-  #   curr.centroid <- curr.row$V1
-  #   curr.count <- curr.row$V2
-  #   curr.collapse.set <- strsplit(curr.row$V3, ",")[[1]]
-  #   
-  #   if (length(curr.collapse.set) > 1) {
-  #     curr.to.collapse <- setdiff(curr.collapse.set, curr.centroid)
-  #     curr.ct <- substring(curr.centroid, 1, 8)
-  #     
-  #     for (j in 1:length(curr.to.collapse)) {
-  #       curr.for.c <- curr.to.collapse[j]
-  #       curr.for.c.ct <- substring(curr.for.c, 1, 8)
-  #       if (curr.for.c.ct != curr.ct) {
-  #         ind <- which(collapsing$concat == curr.to.collapse[j])
-  #         ind.cent <- which(collapsing$concat == curr.centroid)
-  #         new.collapsing.df[ind, "concat"] <- curr.centroid
-  #         new.collapsing.df[ind, "CellTag"] <- collapsing[ind.cent[1], "CellTag"]
-  #         new.collapsing.df[ind, "Cell.Barcode"] <- collapsing[ind.cent[1], "Cell.Barcode"]
-  #       }
-  #     }
-  #     curr.centroid.sub <- new.collapsing.df[which(new.collapsing.df$concat == curr.centroid), ]
-  #     curr.count.new <- sum(curr.centroid.sub$value)
-  #     curr.new.row <- data.frame(concat = curr.centroid, CellTag = unique(curr.centroid.sub$CellTag),
-  #                                Cell.Barcode = unique(curr.centroid.sub$Cell.Barcode), value = curr.count.new,
-  #                                stringsAsFactors = F)
-  #   } else {curr.new.row <- new.collapsing.df[which(new.collapsing.df$concat == curr.centroid), ]}
-  # 
-  #   if (nrow(final.collapsing.df) <= 0){
-  #     final.collapsing.df <- curr.new.row
-  #   } else {
-  #     final.collapsing.df <- rbind(final.collapsing.df, curr.new.row)
-  #   }
-  # }
-  
-  final.collapsing.df <- setDT(final.collapsing.df)
+  ultimate.collapsing.df <- setDT(ultimate.collapsing.df)
   # Regenerate the new matrix
-  new.matrix <- dcast(final.collapsing.df, Cell.Barcode~CellTag, fill = 0)
+  new.matrix <- dcast(ultimate.collapsing.df, Cell.Barcode~CellTag, fill = 0)
   # Give the matrix rownames
   cell.rnm <- new.matrix$Cell.Barcode
   cnms <- colnames(new.matrix)[2:ncol(new.matrix)]

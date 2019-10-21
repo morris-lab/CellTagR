@@ -10,7 +10,9 @@
 #' 
 CellTagExtraction <- function(celltag.obj, celltag.version, technique = "10x") {
   celltag.obj@curr.version <- celltag.version
-  fastq.bam.input <- celltag.obj@fastq.bam.dir
+  fastq.bam.input <- list.files(celltag.obj@fastq.bam.dir, full.names = T)
+  file.extension.unique <- unique(file_ext(fastq.bam.input))
+  
   if (length(celltag.obj@celltag.version) > 0) {
     if (celltag.obj@curr.version %in% celltag.obj@celltag.version) {
       print("This CellTag has already been processed!")
@@ -23,13 +25,25 @@ CellTagExtraction <- function(celltag.obj, celltag.version, technique = "10x") {
   
   p.calling <- CellTagPatternCalling(celltag.version)
   
-  if (endsWith(fastq.bam.input, "fastq") || endsWith(fastq.bam.input, "fq")) {
+  if (endsWith(file.extension.unique, "fastq") || endsWith(file.extension.unique, "fq")) {
+    if (length(fastq.bam.input) > 1) {
+      stop("Please process the whitelist files one at a time!")
+    }
     rslt <- fastq.process(fastq.file = fastq.bam.input, pattern = p.calling[1], p.calling[2], p.calling[3])
     celltag.obj@fastq.full.celltag[[celltag.version]] <- rslt[[1]]
     celltag.obj@fastq.only.celltag[[celltag.version]] <- rslt[[2]]
   }
-  if (endsWith(fastq.bam.input, "bam")) {
-    rslt <- bam.process(bam.file = fastq.bam.input, pattern = p.calling[1], p.calling[2], p.calling[3], technique)
+  if (endsWith(file.extension.unique, "bam")) {
+    rslt <- NULL
+    for (i in 1:length(fastq.bam.input)) {
+      curr.rslt <- bam.process(bam.file = fastq.bam.input[i], pattern = p.calling[1], p.calling[2], p.calling[3], technique)
+      if (length(fastq.bam.input) > 1) curr.rslt$Cell.BC <- paste0("Sample-", i, "_", curr.rslt$Cell.BC)
+      if (is.null(rslt)) {
+        rslt <- curr.rslt
+      } else {
+        rslt <- rbind(rslt, curr.rslt)
+      }
+    }
     celltag.obj@bam.parse.rslt[[celltag.version]] <- rslt
   }
   
