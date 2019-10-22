@@ -56,10 +56,10 @@ CellTagDataForCollapsing <- function(celltag.obj, output.file) {
 CellTagDataPostCollapsing <- function(celltag.obj, collapsed.rslt.file) {
   ultimate.collapsing.df <- data.frame()
   for (i in 1:length(collapsed.rslt.file)) {
-    print(paste0("Processing ", curr.file.dir))
     final.collapsing.df <- data.frame()
     # Process this one by one
     curr.file.dir <- collapsed.rslt.file[i]
+    print(paste0("Processing ", curr.file.dir))
     # Read in the collpased result
     collapsed <- read.table(curr.file.dir, sep = "\t", header = F, stringsAsFactors = F)
     # Read in the file for collapsing
