@@ -240,7 +240,7 @@ addData2Nodes <- function(celltag.obj, additional_data){
   Nodes <- celltag.obj@nodes
   new.nodes <- cbind(Nodes, additional_data[Nodes$node_name_unmodified,])
   no.col <- ncol(additional_data)
-  colnames(new.nodes)[(ncol(new.nodes)-1):ncol(new.nodes)] <- colnames(additional_data)
+  colnames(new.nodes)[(ncol(new.nodes)-no.col):ncol(new.nodes)] <- colnames(additional_data)
   
   celltag.obj@nodes <- new.nodes
   return(celltag.obj)
