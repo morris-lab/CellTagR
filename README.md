@@ -343,4 +343,3 @@ Below is a sample bar chart!
 </p>
 
 ## Contact Us
-
