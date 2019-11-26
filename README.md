@@ -317,7 +317,7 @@ bam.test.obj <- drawSubnet(tag = "CellTagV1_2", overlay = "Cluster", celltag.obj
 bam.test.obj@network
 ```
 
-Additionally, the network can be saved to a html file, allowing better visualization and overview.
+Additionally, the network can be saved to a html file, allowing better visualization and overview. Please make sure to have pandoc to support markdown and output this network.
 ```r
 saveNetwork(bam.test.obj@network, "~/Desktop/presentation/Demo/hf1.d15.network.construction.html")
 ```
