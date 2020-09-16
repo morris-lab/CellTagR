@@ -23,9 +23,9 @@ MetricBasedFiltering <- function(celltag.obj, cutoff, comparison = "less") {
   
   # Set up the filtered celltag dataset object
   if (comparison == "less") {
-    cell.filter <- subset(CellTags.per.cell.whitelisted.pf, CellTags.per.cell.whitelisted.pf < (cutoff))
+    cell.filter <- subset(CellTags.per.cell.whitelisted.pf, CellTags.per.cell.whitelisted.pf <= (cutoff))
   } else {
-    cell.filter <- subset(CellTags.per.cell.whitelisted.pf, CellTags.per.cell.whitelisted.pf > (cutoff))
+    cell.filter <- subset(CellTags.per.cell.whitelisted.pf, CellTags.per.cell.whitelisted.pf >= (cutoff))
   }
   cell.bc.filter <- row.names(cell.filter)
   # Filter celltag dataset
