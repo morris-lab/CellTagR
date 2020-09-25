@@ -4,8 +4,13 @@
 \alias{bam.process}
 \title{Bam File Process Function}
 \usage{
-bam.process(bam.file, pattern, short.nt.before.tag, short.nt.after.tag,
-  technique)
+bam.process(
+  bam.file,
+  pattern,
+  short.nt.before.tag,
+  short.nt.after.tag,
+  technique
+)
 }
 \arguments{
 \item{bam.file}{The input bam data directory}
