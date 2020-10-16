@@ -1,4 +1,12 @@
 # R Package - CellTagR
+
+## Important Notice
+We recently found that inside the setter function, the column names of the filtered count matrix are possibly shuffled around during the second round of filtering, thus some CellTags were associated with the wrong cell barcodes. This could lead to inaccurate clone-calling. We suggest users reinstall the package and empty the slot with the following line of code and restart the pipeline from this step: https://github.com/morris-lab/CellTagR#6-additional-filtering.
+```r
+celltag.obj@metric.filtered.count <- as(matrix(NA, 0, 0), "dgCMatrix")
+```
+
+## Description
 This is a wrapped R package of the workflow (https://github.com/morris-lab/CellTagWorkflow) with additional assessment of the complexity of the Celltag Library sequences. Additionally, previous version of this package can be found https://github.com/morris-lab/PreviousCloneHunter. ***Note: This has been changed and improved. Analysis with previous version will not be compatible.*** This package have a dependency on R version (R >= 3.5.0). This can be used as an alternative approach for this pipeline. For details regarding development and usage of CellTag, please refer to the following papaer - *Biddy et. al. Nature, 2018*, https://www.nature.com/articles/s41586-018-0744-4, *Kong et al., Nature Protocol, 2020*, https://www.nature.com/articles/s41596-019-0247-2
 
 Install devtools
