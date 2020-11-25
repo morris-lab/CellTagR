@@ -36,10 +36,17 @@ JaccardAnalysis <- function(celltag.obj, plot.corr = TRUE) {
 #' CloneCalling(bam.test.obj, 0.7)
 #'
 CloneCalling <- function(celltag.obj, correlation.cutoff) {
-  Jaccard.Matrix <- as.matrix(celltag.obj@jaccard.mtx)
+  Jaccard.Matrix <- celltag.obj@jaccard.mtx
+  
   # Using the igraph package to facilitate the identification of membership to each clone
   test <- Jaccard.Matrix*lower.tri(Jaccard.Matrix)
-  check.corelation <- which(test > correlation.cutoff, arr.ind=TRUE)
+  test.df <- as.data.frame(summary(test))
+  test.df.sub <- test.df[which(test.df$x > 0.7), ]
+  
+  check.corelation <- test.df.sub[,c(1,2)]
+  colnames(check.corelation) <- c("row", "col")
+  check.corelation <- as.matrix(check.corelation)
+
   graph.cor <- graph.data.frame(check.corelation, directed = FALSE)
   groups.cor <- split(unique(as.vector(check.corelation)), clusters(graph.cor)$membership)
   conv.groups.cor <- lapply(groups.cor,

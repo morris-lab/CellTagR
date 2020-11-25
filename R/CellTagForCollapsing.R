@@ -12,11 +12,12 @@
 CellTagDataForCollapsing <- function(celltag.obj, output.file) {
   # Get the data out from the CellTag object
   umi.matrix <- GetCellTagCurrentVersionWorkingMatrix(celltag.obj, "raw.count")
-  for.collapse <- t(as.matrix(umi.matrix))
-  # Melt the matrix
-  for.collapse <- melt(for.collapse)
-  # Subset the matrix to only contain tags with positive UMI numbers
-  for.collapse <- subset(for.collapse, value > 0)
+
+  for.collapse <- as.data.frame(summary(umi.matrix))
+  for.collapse$i <- rownames(umi.matrix)[for.collapse$i]
+  for.collapse$j <- colnames(umi.matrix)[for.collapse$j]
+
+  colnames(for.collapse) <- c("X2", "X1", "value")
   for.collapse$X1 <- as.character(for.collapse$X1)
   for.collapse$X2 <- as.character(for.collapse$X2)
   # Create the contatenation column
@@ -158,16 +159,14 @@ CellTagDataPostCollapsing <- function(celltag.obj, collapsed.rslt.file) {
     rownames(ultimate.collapsing.df) <- NULL
     close(pb)
   }
+
+  df <- transform(ultimate.collapsing.df, Cell.Barcode = factor(Cell.Barcode), CellTag = factor(CellTag))
+
+  celltag.count.sparse <- sparseMatrix(as.integer(df$Cell.Barcode), as.integer(df$CellTag), x = df$value)
+  colnames(celltag.count.sparse) <- levels(df$Cell.Tag)
+  rownames(celltag.count.sparse) <- levels(df$Cell.BC)
   
-  ultimate.collapsing.df <- setDT(ultimate.collapsing.df)
-  # Regenerate the new matrix
-  new.matrix <- dcast(ultimate.collapsing.df, Cell.Barcode~CellTag, fill = 0)
-  # Give the matrix rownames
-  cell.rnm <- new.matrix$Cell.Barcode
-  cnms <- colnames(new.matrix)[2:ncol(new.matrix)]
-  new.matrix <- as.matrix(new.matrix[, ..cnms])
-  rownames(new.matrix) <- cell.rnm
   # Save the new matrix to the object
-  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "collapsed.count", as(new.matrix, "dgCMatrix"))
+  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "collapsed.count", as(celltag.count.sparse, "dgCMatrix"))
   return(new.obj)
 }
