@@ -20,6 +20,7 @@ CellTagDataForCollapsing <- function(celltag.obj, output.file) {
   colnames(for.collapse) <- c("X2", "X1", "value")
   for.collapse$X1 <- as.character(for.collapse$X1)
   for.collapse$X2 <- as.character(for.collapse$X2)
+  for.collapse <- for.collapse[which(for.collapse$value > 0), ]
   # Create the contatenation column
   if (length(list.files(celltag.obj@fastq.bam.dir)) > 1) {
     parts.to.paste <- unlist(lapply(strsplit(for.collapse$X2, "_"), function(x) x[2]))
