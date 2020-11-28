@@ -4,7 +4,7 @@
 \alias{JaccardAnalysis}
 \title{Jaccard Analysis Function}
 \usage{
-JaccardAnalysis(celltag.obj, plot.corr = TRUE)
+JaccardAnalysis(celltag.obj, plot.corr = TRUE, fast = FALSE)
 }
 \arguments{
 \item{celltag.obj}{A CellTag object with the counts filtered based on metrics}

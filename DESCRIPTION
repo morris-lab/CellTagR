@@ -15,7 +15,8 @@ Depends: R (>= 3.5.0),
     Matrix,
     tidyverse,
     foreach,
-    networkD3
+    networkD3,
+    proxyC
 License: MIT License
 Encoding: UTF-8
 LazyData: true
