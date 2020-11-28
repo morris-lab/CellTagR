@@ -164,8 +164,8 @@ CellTagDataPostCollapsing <- function(celltag.obj, collapsed.rslt.file) {
   df <- transform(ultimate.collapsing.df, Cell.Barcode = factor(Cell.Barcode), CellTag = factor(CellTag))
 
   celltag.count.sparse <- sparseMatrix(as.integer(df$Cell.Barcode), as.integer(df$CellTag), x = df$value)
-  colnames(celltag.count.sparse) <- levels(df$Cell.Tag)
-  rownames(celltag.count.sparse) <- levels(df$Cell.BC)
+  colnames(celltag.count.sparse) <- levels(df$CellTag)
+  rownames(celltag.count.sparse) <- levels(df$Cell.Barcode)
   
   # Save the new matrix to the object
   new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "collapsed.count", as(celltag.count.sparse, "dgCMatrix"))
