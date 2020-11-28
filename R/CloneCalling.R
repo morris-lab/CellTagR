@@ -44,7 +44,14 @@ CloneCalling <- function(celltag.obj, correlation.cutoff) {
   Jaccard.Matrix <- celltag.obj@jaccard.mtx
   
   # Using the igraph package to facilitate the identification of membership to each clone
-  test <- Jaccard.Matrix*lower.tri(Jaccard.Matrix)
+  jac.summ <- Matrix::summary(Jaccard.Matrix)
+  lower.tri.summ <- subset(jac.summ, i>j) # Exclude diagnol
+  
+  test <- sparseMatrix(i = lower.tri.summ$i,
+                       j = lower.tri.summ$j,
+                       x = lower.tri.summ$x,
+                       dims = dim(Jaccard.Matrix))
+  
   test.df <- as.data.frame(Matrix::summary(test))
   test.df.sub <- test.df[which(test.df$x > 0.7), ]
   
