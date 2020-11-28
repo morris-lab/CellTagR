@@ -9,13 +9,18 @@
 #' @examples
 #' JaccardAnalysis(bam.test.obj)
 #'
-JaccardAnalysis <- function(celltag.obj, plot.corr = TRUE) {
+JaccardAnalysis <- function(celltag.obj, plot.corr = TRUE, fast = FALSE) {
   filtered.whitelised.data <- GetCellTagCurrentVersionWorkingMatrix(celltag.obj, "metric.filtered.count")
   # Calculating the Jaccard matrix
-  Jac <- simil(as.matrix(filtered.whitelised.data), method = "Jaccard")
-  Jac <- as.matrix(Jac)
+  if (fast) {
+    Jac <- proxyC::simil(filtered.whitelised.data, method = "jaccard")
+    Jac <- as(Jac, "dgTMatrix")
+  } else {
+    Jac <- proxy::simil(as.matrix(filtered.whitelised.data), method = "Jaccard")
+    Jac <- as.matrix(Jac)
+  }
   
-  if (plot.corr) {
+  if ((!fast) & plot.corr) {
     diag(Jac) <- 1
     corrplot(Jac, method="color", order="hclust", hclust.method ="ward.D2", cl.lim=c(0,1), tl.cex=0.1)
   }
