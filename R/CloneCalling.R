@@ -40,7 +40,7 @@ CloneCalling <- function(celltag.obj, correlation.cutoff) {
   
   # Using the igraph package to facilitate the identification of membership to each clone
   test <- Jaccard.Matrix*lower.tri(Jaccard.Matrix)
-  test.df <- as.data.frame(summary(test))
+  test.df <- as.data.frame(Matrix::summary(test))
   test.df.sub <- test.df[which(test.df$x > 0.7), ]
   
   check.corelation <- test.df.sub[,c(1,2)]
