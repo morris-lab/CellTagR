@@ -12,8 +12,8 @@
 CellTagDataForCollapsing <- function(celltag.obj, output.file) {
   # Get the data out from the CellTag object
   umi.matrix <- GetCellTagCurrentVersionWorkingMatrix(celltag.obj, "raw.count")
-
-  for.collapse <- as.data.frame(summary(umi.matrix))
+  
+  for.collapse <- as.data.frame(Matrix::summary(umi.matrix))
   for.collapse$i <- rownames(umi.matrix)[for.collapse$i]
   for.collapse$j <- colnames(umi.matrix)[for.collapse$j]
 
