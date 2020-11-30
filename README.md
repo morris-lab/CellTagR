@@ -246,8 +246,13 @@ If it looks good, proceed to the following steps to call the clones.
 ### 8. Clone Calling
 #### I. Jaccard Analysis
 This calculates pairwise Jaccard similarities among cells using the filtered CellTag UMI count matrix. This function takes the CellTag object with metric filtering carried out. This will generate a Jaccard similarity matrix, which is saved as a part of the object in a slot - "jaccard.mtx". It also plots a correlation heatmap with cells ordered by hierarchical clustering. 
+
 ```r
 bam.test.obj <- JaccardAnalysis(bam.test.obj)
+```
+##### Note: For large sparse matrix, a fast version can be chosen using the parameter *fast*.
+```r
+bam.test.obj <- JaccardAnalysis(bam.test.obj, fast = T)
 ```
 #### II. Clone Calling
 Based on the Jaccard similarity matrix, we can call clones of cells. A clone will be selected if the correlations inside of the clones passes the cutoff given (here, 0.7 is used. It can be changed based on the heatmap/correlation matrix generated above). Using this part, a list containing the clonal identities of all cells and the count information for each clone will be stored in the object in slots - "clone.composition" and "clone.size.info". 
