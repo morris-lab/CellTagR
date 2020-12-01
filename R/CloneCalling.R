@@ -50,7 +50,8 @@ CloneCalling <- function(celltag.obj, correlation.cutoff) {
   test <- sparseMatrix(i = lower.tri.summ$i,
                        j = lower.tri.summ$j,
                        x = lower.tri.summ$x,
-                       dims = dim(Jaccard.Matrix))
+                       dims = dim(Jaccard.Matrix),
+                       dimnames = dimnames(Jaccard.Matrix))
   
   test.df <- as.data.frame(Matrix::summary(test))
   test.df.sub <- test.df[which(test.df$x > correlation.cutoff), ]
