@@ -53,7 +53,7 @@ CloneCalling <- function(celltag.obj, correlation.cutoff) {
                        dims = dim(Jaccard.Matrix))
   
   test.df <- as.data.frame(Matrix::summary(test))
-  test.df.sub <- test.df[which(test.df$x > 0.7), ]
+  test.df.sub <- test.df[which(test.df$x > correlation.cutoff), ]
   
   check.corelation <- test.df.sub[,c(1,2)]
   colnames(check.corelation) <- c("row", "col")
