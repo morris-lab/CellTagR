@@ -72,12 +72,42 @@ OR
 download.file("https://sra-pub-src-1.s3.amazonaws.com/SRR7347033/hf1.d15.possorted_genome_bam.bam.1", "./hf1.d15.bam")
 ```
 
+### (RECOMMENDED) Optional Step: BAM File Filtering
+***NOTE:*** If BAM file filtering is **NOT** required (although, we strongly recommend this), skip this step and move to *Step 2 - Create a CellTag Object*, in which the entire BAM file will be used. Otherwise, before generating a CellTag object and extracting the CellTags, we will carry out the following BAM filtering step, from which a subset of reads in the BAM file will be searched during CellTag extraction.
+
+In this step, we will filter the BAM file to reduce the possibility that false positive CellTags will be identified. Briefly, the 17-20 bp sequence that comprises the CellTag barcode may appear by chance in other regions of the transcriptome. These may be identified as CellTags and cells expressing these transcripts may be falsely called as clones. By filtering reads in the BAM file to only include those which are unmapped as well as those mapped to GFP or (optionally) the CellTag UTR, we reduce the chances of extracting false positive CellTags.
+
+We recommend adding the CellTag UTR as a transgene to the reference used during alignment. This sequence is stored in https://github.com/morris-lab/CellTagR/Exmples/CellTag_UTR.fa. More information on adding a marker gene to a reference can be found here: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/tutorial_mr.
+
+### I. Filter unmapped reads
+First, we will use samtools to efficiently filter umapped reads.
+
+```r
+# bash
+samtools view -b -f 4 ./hf1.d15.bam > ./hf1.d15.filtered.bam
+```
+
+### II. Filter transgene reads
+Next, we will filter reads aligned to GFP or the CellTag UTR.
+
+```r
+# bash
+samtools view -b  ./hf1.d15.bam GFP >> ./hf1.d15.filtered.bam
+```
+
+If the CellTag UTR was not included in the reference, the following line may be omitted.
+
+```r
+# bash
+samtools view -b ./hf1.d15.bam CellTag.UTR >> ./hf1.d15.filtered.bam
+```
+
 ### 2. Create a CellTag Object
 In this step, we will initialize a CellTag object with a object name and the path to where the bam file is stored **if only one bam file is processed.**
 
 ```r
 # Set up the CellTag Object
-bam.test.obj <- CellTagObject(object.name = "bam.cell.tag.obj", fastq.bam.directory = "./hf1.d15.bam")
+bam.test.obj <- CellTagObject(object.name = "bam.cell.tag.obj", fastq.bam.directory = "./hf1.d15.filtered.bam")
 ```
 
 **Update: CellTagR now enables read-in of multiple BAM files at a time.** When multiple BAM files need to be processed, ***please use a folder that contains ONLY BAM files and put the fastq.bam.directory as the path of the folder.*** For instance, two bam files need to be processed named as *bam1.bam* and *bam2.bam*. They will be put into a folder named as *beautiful_bams* in the *Desktop*. Then, the input will be *fastq.bam.directory="~/Desktop/beautiful_bams/"* as below.
