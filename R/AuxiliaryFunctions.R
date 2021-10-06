@@ -95,7 +95,11 @@ bam.process <- function(bam.file, pattern, short.nt.before.tag, short.nt.after.t
       if (tolower(technique) == "dropseq") {
           parameters <- ScanBamParam(what = scanBamWhat(), tag = c("XC", "GN", "XM", "GE"))
       } else {
-          stop("We don't support your current single-cell sequencing technology. Please contact us to add.")
+          if (tolower(technique) == "zumi") {
+              parameters <- ScanBamParam(what = scanBamWhat(), tag = c("BC", "GN", "UB", "CR"))
+          } else {
+              stop("We don't support your current single-cell sequencing technology. Please contact us to add.")
+          }
       }
   }
   bam.parsed.df <- data.table()
@@ -119,6 +123,9 @@ bam.process <- function(bam.file, pattern, short.nt.before.tag, short.nt.after.t
             if (tolower(technique) == "dropseq") {
                 curr.cell.bc <- curr.read$tag$XC
                 curr.umi <- curr.read$tag$XM
+            } else if (tolower(technique) == "zumi") {
+                curr.cell.bc <- curr.read$tag$BC
+                curr.umi <- curr.read$tag$UB
             }
           }
         curr.cell.tag <- rep(NA, length(curr.read$qname))
