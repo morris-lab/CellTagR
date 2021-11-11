@@ -249,7 +249,7 @@ SetCellTagCurrentVersionWorkingMatrix <- function(celltag.obj, slot.to.set, fina
     if (ncol(to.merge.mtx.cem) <= 0) {
       new.mtx <- to.merge.mtx.cop[,colnames(cop.final)]
     } else {
-      new.mtx <- cbind(to.merge.mtx.cop[,colnames(cop.final)], to.merge.mtx.cem[,colnames(cop.final)])
+      new.mtx <- cbind(to.merge.mtx.cop[new.rownames,], to.merge.mtx.cem[new.rownames, ])
     }
     
     slot(celltag.obj, slot.to.set) <- new.mtx
