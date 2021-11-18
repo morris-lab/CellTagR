@@ -44,6 +44,9 @@ CloneCalling <- function(celltag.obj, correlation.cutoff) {
   
   # Using the igraph package to facilitate the identification of membership to each clone
   jac.summ <- Matrix::summary(Jaccard.Matrix)
+  jac.lower.i <- jac.summ$j
+  jac.summ$j <- jac.summ$i
+  jac.summ$i <- jac.lower.i
   lower.tri.summ <- subset(jac.summ, i>j) # Exclude diagnol
   
   test <- sparseMatrix(i = lower.tri.summ$i,
