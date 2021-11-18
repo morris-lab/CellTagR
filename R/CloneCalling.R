@@ -14,10 +14,9 @@ JaccardAnalysis <- function(celltag.obj, plot.corr = TRUE, fast = FALSE) {
   # Calculating the Jaccard matrix
   if (fast) {
     Jac <- proxyC::simil(filtered.whitelised.data, method = "jaccard")
-    Jac <- as(Jac, "dgTMatrix")
   } else {
     Jac <- proxy::simil(as.matrix(filtered.whitelised.data), method = "Jaccard")
-    Jac <- as.matrix(Jac)
+    Jac <- as(Jac, "dsTMatrix")
   }
   
   if ((!fast) & plot.corr) {
@@ -25,7 +24,7 @@ JaccardAnalysis <- function(celltag.obj, plot.corr = TRUE, fast = FALSE) {
     corrplot(Jac, method="color", order="hclust", hclust.method ="ward.D2", cl.lim=c(0,1), tl.cex=0.1)
   }
   
-  celltag.obj@jaccard.mtx <- as(Jac, "dgCMatrix")
+  celltag.obj@jaccard.mtx <- Jac
   return(celltag.obj)
 }
 
