@@ -55,7 +55,7 @@ CellTagDataForCollapsing <- function(celltag.obj, output.file) {
 #' @examples
 #' CellTagDataPostCollapsing(bam.test.obj, "./collapsing_result.txt")
 #' 
-CellTagDataPostCollapsing <- function(celltag.obj, collapsed.rslt.file) {
+CellTagDataPostCollapsing <- function(celltag.obj, collapsed.rslt.file, replace.option = FALSE) {
   ultimate.collapsing.df <- data.frame()
   for (i in 1:length(collapsed.rslt.file)) {
     final.collapsing.df <- data.frame()
@@ -169,6 +169,6 @@ CellTagDataPostCollapsing <- function(celltag.obj, collapsed.rslt.file) {
   rownames(celltag.count.sparse) <- levels(df$Cell.Barcode)
   
   # Save the new matrix to the object
-  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "collapsed.count", as(celltag.count.sparse, "dgCMatrix"))
+  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "collapsed.count", as(celltag.count.sparse, "dgCMatrix"), replace = replace.option)
   return(new.obj)
 }
