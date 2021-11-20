@@ -9,7 +9,7 @@
 #' @examples
 #' CellTagMatrixCount(bam.test.obj, "barcodes.tsv")
 #' 
-CellTagMatrixCount <- function(celltag.obj, barcodes.file) {
+CellTagMatrixCount <- function(celltag.obj, barcodes.file, replace.option = FALSE) {
   # Read in the cell barcodes identified during alignment
   barcodeList <- fread(barcodes.file, header = FALSE)[[1]]
   celltagData <- celltag.obj@bam.parse.rslt[[celltag.obj@curr.version]]
@@ -70,7 +70,7 @@ CellTagMatrixCount <- function(celltag.obj, barcodes.file) {
   
 
   dgc.mtx.filter <- celltag.count.sparse
-  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "raw.count", as(dgc.mtx.filter, "dgCMatrix"))
+  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "raw.count", as(dgc.mtx.filter, "dgCMatrix"), replace = replace.option)
 
   return(new.obj)
 }
