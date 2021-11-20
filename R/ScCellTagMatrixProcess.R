@@ -9,7 +9,7 @@
 #' @examples
 #' SingleCellDataBinatization(bam.test.obj, 2)
 #' 
-SingleCellDataBinatization <- function(celltag.obj, tag.cutoff) {
+SingleCellDataBinatization <- function(celltag.obj, tag.cutoff, replace.option = FALSE) {
   obj.collapsed.count <- GetCellTagCurrentVersionWorkingMatrix(celltag.obj, "collapsed.count")
   if (sum(dim(obj.collapsed.count)) <= 0) {
     CellTags <- GetCellTagCurrentVersionWorkingMatrix(celltag.obj, "raw.count")
@@ -18,7 +18,7 @@ SingleCellDataBinatization <- function(celltag.obj, tag.cutoff) {
   }
   CellTags[CellTags < tag.cutoff] <- 0
   CellTags[CellTags > 0] <- 1
-  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "binary.mtx", as(CellTags, "dgCMatrix"))
+  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "binary.mtx", as(CellTags, "dgCMatrix"), replace = replace.option)
   
   return(new.obj)
 }
@@ -34,7 +34,7 @@ SingleCellDataBinatization <- function(celltag.obj, tag.cutoff) {
 #' @examples
 #' SingleCellDataWhitelist(bam.test.obj, "~/Desktop/My_Favourite_Whitelist.csv")
 #' 
-SingleCellDataWhitelist <- function(celltag.obj, whitels.cell.tag.file) {
+SingleCellDataWhitelist <- function(celltag.obj, whitels.cell.tag.file, replace.option = FALSE) {
   # Store the cell names
   CellTags <- as.matrix(GetCellTagCurrentVersionWorkingMatrix(celltag.obj, "binary.mtx"))
   cell.names <- rownames(CellTags)
@@ -61,7 +61,7 @@ SingleCellDataWhitelist <- function(celltag.obj, whitels.cell.tag.file) {
   celltags.whitelisted <- CellTags[whitelist,]
   colnames(celltags.whitelisted) <- cell.names
   
-  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "whitelisted.count", as(t(as.matrix(celltags.whitelisted)), "dgCMatrix"))
+  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "whitelisted.count", as(t(as.matrix(celltags.whitelisted)), "dgCMatrix"), replace = replace.option)
   return(new.obj)
 }
 
