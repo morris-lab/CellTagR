@@ -10,7 +10,7 @@
 #' @examples
 #' MetricBasedFiltering(bam.test.object, 20, "less")
 #'
-MetricBasedFiltering <- function(celltag.obj, cutoff, comparison = "less") {
+MetricBasedFiltering <- function(celltag.obj, cutoff, comparison = "less", replace.option = FALSE) {
   whitelisted.ct.data <- GetCellTagCurrentVersionWorkingMatrix(celltag.obj, "whitelisted.count")
   metric.filter.ct.data <- GetCellTagCurrentVersionWorkingMatrix(celltag.obj, "metric.filtered.count")
   if (ncol(metric.filter.ct.data) <= 0) {
@@ -31,7 +31,7 @@ MetricBasedFiltering <- function(celltag.obj, cutoff, comparison = "less") {
   # Filter celltag dataset
   celltags.whitelisted.new <- whitelisted.celltag.data[cell.bc.filter, ]
 
-  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "metric.filtered.count", as(celltags.whitelisted.new, "dgCMatrix"))
+  new.obj <- SetCellTagCurrentVersionWorkingMatrix(celltag.obj, "metric.filtered.count", as(celltags.whitelisted.new, "dgCMatrix"), replace = replace.option)
 
   return(new.obj)
 }
