@@ -217,10 +217,15 @@ GetCellTagCurrentVersionWorkingMatrix <- function(celltag.obj, slot.to.select) {
   }
 }
 
-SetCellTagCurrentVersionWorkingMatrix <- function(celltag.obj, slot.to.set, final.to.set) {
+SetCellTagCurrentVersionWorkingMatrix <- function(celltag.obj, slot.to.set, final.to.set, replace = FALSE) {
   cop.final <- final.to.set
   colnames(cop.final) <- paste0(celltag.obj@curr.version, ".", colnames(cop.final))
   curr.version.existing.mtx <- GetCellTagCurrentVersionWorkingMatrix(celltag.obj, slot.to.set)
+  
+  if (replace) {
+    slot(celltag.obj, slot.to.set) <- cop.final
+    return(celltag.obj)
+  }
   
   if (sum(dim(slot(celltag.obj, slot.to.set))) <= 0) {
     slot(celltag.obj, slot.to.set) <- cop.final
