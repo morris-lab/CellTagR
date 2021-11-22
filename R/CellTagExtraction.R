@@ -47,7 +47,7 @@ CellTagExtraction <- function(celltag.obj, celltag.version, technique = "10x") {
       if (is.null(rslt)) {
         rslt <- curr.rslt
       } else {
-        rslt <- rbind(rslt, curr.rslt)
+        rslt <- rbind(rslt, curr.rslt, fill = TRUE)
       }
     }
     celltag.obj@bam.parse.rslt[[celltag.version]] <- rslt
