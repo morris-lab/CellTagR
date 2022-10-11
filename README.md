@@ -218,11 +218,11 @@ head(bam.test.obj@collapsed.count)
 
 Below is an example Jaccard Analysis result with Error Correction using Starcode collapsing (top - without collapsing, bottom - with collapsing):
 <p align="center">
-    <img src="/Exmples/jaccard wo collapsing.png" height="480" width="720">
+    <img src="/Examples/jaccard wo collapsing.png" height="480" width="720">
 </p>
 
 <p align="center">
-    <img src="/Exmples/jaccard example.png" height="480" width="720">
+    <img src="/Examples/jaccard example.png" height="480" width="720">
 </p>
 
 ### 2. Binarize the single-cell CellTag UMI count matrix
@@ -239,7 +239,7 @@ MetricPlots(bam.test.obj)
 ```
 Below is an example plot that you could obtain from this object
 <p align="center">
-  <img src="/Exmples/pre_filtering.png" height="720" width="720">
+  <img src="/Examples/pre_filtering.png" height="720" width="720">
 </p>
 
 ### 4. Apply the whitelisted CellTags generated from assessment
@@ -271,7 +271,7 @@ MetricPlots(bam.test.obj)
 ```
 Example plot of last check!
 <p align="center">
-  <img src="/Exmples/post_filtering.png" height="720" width="720">
+  <img src="/Examples/post_filtering.png" height="720" width="720">
 </p>
 If it looks good, proceed to the following steps to call the clones.
 
@@ -384,7 +384,7 @@ ggplot(data = bar.data) +
 ```
 Below is a sample bar chart!
 <p align="center">
-  <img src="/Exmples/bar_Chart.png" height="540" width="720">
+  <img src="/Examples/bar_Chart.png" height="540" width="720">
 </p>
 
 ## Contact Us
