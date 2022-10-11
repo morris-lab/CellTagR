@@ -1,6 +1,8 @@
 # R Package - CellTagR
 
-## Important Notice
+## Important Notices
+We recently fixed the Binarization function name from ```SingleCellDataBinatization``` to ```SingleCellDataBinarization```. Please update your code accordingly, if you are using the latest version of CellTagR.
+
 We recently found that inside the setter function, the column names of the filtered count matrix are possibly shuffled around during the second round of filtering, thus some CellTags were associated with the wrong cell barcodes. This could lead to inaccurate clone-calling. We suggest users reinstall the package and empty the slot with the following line of code and restart the pipeline from this step: https://github.com/morris-lab/CellTagR#6-additional-filtering.
 ```r
 celltag.obj@metric.filtered.count <- as(matrix(NA, 0, 0), "dgCMatrix")
