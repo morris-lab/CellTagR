@@ -45,7 +45,7 @@ dim(bam.test.obj@collapsed.count)
 
 ### generate the Binary matrix
 ```{r}
-bam.test.obj <- SingleCellDataBinatization(bam.test.obj, 2)
+bam.test.obj <- SingleCellDataBinarization(bam.test.obj, 2)
 ```
 
 ### Look at the metric plots

@@ -227,7 +227,7 @@ Below is an example Jaccard Analysis result with Error Correction using Starcode
 Here, we binarize the count matrix to contain 0 or 1, where 0 indicates no such CellTag found in a single cell and 1 reports CellTag expression. The suggested cutoff that marks presence or absence is at least 2 counts per CellTag per Cell. For details regarding cutoff choice, please refer to the paper - https://www.nature.com/articles/s41586-018-0744-4. The binary matrix will be stored in a slot - 'binary.mtx' - as a *dgCMatrix*. **Note: If collapsing was performed, binarization will be based on the collapsed count matrix. Otherwise, it will be based on the raw count matrix**
 ```r
 # Calling binarization
-bam.test.obj <- SingleCellDataBinatization(bam.test.obj, 2)
+bam.test.obj <- SingleCellDataBinarization(bam.test.obj, 2)
 ```
 
 ### 3. Metric plots to facilitate for additional filtering

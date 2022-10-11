@@ -7,9 +7,9 @@
 #' @keywords single-cell RNA-seq data, CellTagging
 #' @export
 #' @examples
-#' SingleCellDataBinatization(bam.test.obj, 2)
+#' SingleCellDataBinarization(bam.test.obj, 2)
 #' 
-SingleCellDataBinatization <- function(celltag.obj, tag.cutoff, replace.option = FALSE) {
+SingleCellDataBinarization <- function(celltag.obj, tag.cutoff, replace.option = FALSE) {
   obj.collapsed.count <- GetCellTagCurrentVersionWorkingMatrix(celltag.obj, "collapsed.count")
   if (sum(dim(obj.collapsed.count)) <= 0) {
     CellTags <- GetCellTagCurrentVersionWorkingMatrix(celltag.obj, "raw.count")
