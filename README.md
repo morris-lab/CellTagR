@@ -79,7 +79,7 @@ download.file("https://sra-pub-src-1.s3.amazonaws.com/SRR7347033/hf1.d15.possort
 
 In this step, we will filter the BAM file to reduce the possibility that false positive CellTags will be identified. Briefly, the 17-20 bp sequence that comprises the CellTag barcode may appear by chance in other regions of the transcriptome. These may be identified as CellTags and cells expressing these transcripts may be falsely called as clones. By filtering reads in the BAM file to only include those which are unmapped as well as those mapped to GFP or (optionally) the CellTag UTR, we reduce the chances of extracting false positive CellTags.
 
-We recommend adding the CellTag UTR and GFP CDS as transgenes to the reference genome used during alignment. These sequences are stored in https://github.com/morris-lab/CellTagR/blob/master/Examples/CellTag_UTR.fa. More information on adding a marker gene to a reference can be found here: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/tutorial_mr.
+We recommend adding the CellTag UTR and GFP CDS as transgenes to the reference genome used during alignment. These sequences and corresponding GTF entries are stored [here](https://github.com/morris-lab/CellTagR/blob/master/Examples/CellTag_UTR.fa). More information on adding a marker gene to a reference can be found here: https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/tutorial_mr.
 
 ### I. Filter unmapped reads
 First, we will use samtools to efficiently filter umapped reads.
